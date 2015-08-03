@@ -144,7 +144,7 @@ class Route69{
     protected function _comparePathItems($item1, $item2){
         $matches = array();
         // Test if item is a parameter
-        if(preg_match("/(:|@|#).+?/", $item2, $matches) && !empty($item1)){
+        if(preg_match("/^(:|@|#).+?/", $item2, $matches) && !empty($item1)){
             if($matches[1] == '@' && !ctype_alpha($item1)){
                 return false;
             }
