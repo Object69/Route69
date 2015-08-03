@@ -79,18 +79,23 @@ class Route69{
             if(isset($r["path"])){
                 $route      = $this->_pathToArray($r["path"]);
                 $route_good = true;
-                foreach($route as $index => $item){
-                    if(!isset($this->path[$index])){
-                        $route_good = false;
-                        break;
+                if(count($this->path) == count($route)){
+                    foreach($route as $index => $item){
+                        if(!isset($this->path[$index])){
+                            $route_good = false;
+                            break;
+                        }
+                        $good = $this->_comparePathItems($this->path[$index], $route[$index]);
+                        if(!$good){
+                            $route_good = false;
+                            break;
+                        }
+                        $controller = $r["settings"]["controller"];
+                        $settings   = $r["settings"];
                     }
-                    $good = $this->_comparePathItems($this->path[$index], $route[$index]);
-                    if(!$good){
-                        $route_good = false;
-                        break;
-                    }
-                    $controller = $r["settings"]["controller"];
-                    $settings   = $r["settings"];
+                }else{
+                    $controller = null;
+                    $settings   = null;
                 }
                 if($route_good){
                     if(is_callable($controller)){
@@ -107,9 +112,12 @@ class Route69{
                     }
                 }
             }
-            // Route::otherwise
-            else{
-
+        }
+//        var_dump($routes);
+        // Route::otherwise
+        foreach($routes as $route){
+            if(isset($route["fallback"])){
+                echo "here";
             }
         }
         return null;

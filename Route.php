@@ -34,6 +34,7 @@ class Route{
      */
     public function otherwise(array $settings){
         $this->routes[] = array(
+            "fallback" => true,
             "settings" => $settings
         );
         return $this;
