@@ -34,7 +34,7 @@ $app = new Route69();
 $app->config(function(Route $route){
     $route->when('/users/get/#id', [
         'controller' => 'getUsers',
-        // Pass an extra users parameter to the controller (this is optional)
+        // Pass extra parameters to the controller (this is optional)
         'resolve' => [
             'users' => new Users
         ]
