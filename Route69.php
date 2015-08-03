@@ -79,6 +79,8 @@ class Route69{
             if(isset($r["path"])){
                 $route      = $this->_pathToArray($r["path"]);
                 $route_good = true;
+                // If the path lengths match, test them
+                // Otherwise it isn't worth testing
                 if(count($this->path) == count($route)){
                     foreach($route as $index => $item){
                         if(!isset($this->path[$index])){
@@ -113,11 +115,11 @@ class Route69{
                 }
             }
         }
-//        var_dump($routes);
+        // Our route was not found, use our fallback
         // Route::otherwise
         foreach($routes as $route){
             if(isset($route["fallback"])){
-                echo "here";
+
             }
         }
         return null;
