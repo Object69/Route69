@@ -16,11 +16,11 @@ RewriteRule . /index.php [L]
 
 ### Nginx
 
-Inside your server file add the following location:
+Inside your server block add the following location:
 
 ```
 location / {
-    try_files $uri $uri/ /index.php?$args;
+    try_files $uri $uri/ /index.php;
 }
 ```
 
