@@ -1,5 +1,29 @@
 # Route69
 
+## Server Configuration
+
+Before we begin, we need to configure the server to route all files to the main index file where are configuration will be located.
+
+### Apache
+
+Create an `.htaccess` file in the same directory as your `index.php` file and then place this code in the file
+
+```
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . /index.php [L]
+```
+
+### Nginx
+
+Inside your server file add the following location:
+
+```
+location / {
+    try_files $uri $uri/ /index.php?$args;
+}
+```
+
 ## My First App
 
 First thing that we need to do is create the routing app, then use it to setup our configuration.
