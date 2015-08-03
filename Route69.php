@@ -157,8 +157,16 @@ class Route69{
             return true;
         }
         // Test if the two items match
-        if($item1 == $item2){
-            return true;
+        if($this->items["route"]->getStrict()){
+            if($item1 === $item2){
+                return true;
+            }
+        }else{
+            $item1 = strtolower($item1);
+            $item2 = strtolower($item2);
+            if($item1 == $item2){
+                return true;
+            }
         }
         return false;
     }

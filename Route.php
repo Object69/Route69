@@ -11,6 +11,7 @@ namespace Route69;
 class Route{
 
     protected $routes = array();
+    protected $strict = true;
 
     /**
      * Sets a new route to be tested
@@ -44,6 +45,14 @@ class Route{
      */
     public function getRoutes(){
         return $this->routes;
+    }
+
+    public function setStrict($isStrict){
+        $this->strict = (bool)$isStrict;
+    }
+
+    public function getStrict(){
+        return $this->strict;
     }
 
 }
