@@ -4,7 +4,7 @@ namespace Route69;
 
 /**
  *
- * @author Ryan Naddy <rnaddy@corp.acesse.com>
+ * @author Ryan Naddy <untuned20@gmail.com>
  * @name Route.php
  * @version 1.0.0 Aug 3, 2015
  */

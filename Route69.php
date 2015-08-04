@@ -12,7 +12,7 @@ use ReflectionFunction;
 class Route69{
 
     protected
-            $method      = "get",
+            $method      = 'get',
             $path        = array(),
             $items       = array(),
             $controllers = array();
@@ -32,8 +32,9 @@ class Route69{
      */
     public function __construct(){
         $this->items = [
-            "route"       => new Route(),
-            "routeParams" => new RouteParams()
+            'route'       => new Route(),
+            'routeParams' => new RouteParams(),
+            'document'    => new Document()
         ];
 
         $this->method = strtolower(filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
@@ -76,8 +77,8 @@ class Route69{
             $controller = null;
             $settings   = null;
             // Route::when
-            if(isset($r["path"])){
-                $route      = $this->_pathToArray($r["path"]);
+            if(isset($r['path'])){
+                $route      = $this->_pathToArray($r['path']);
                 $route_good = true;
                 // If the path lengths match, test them
                 // Otherwise it isn't worth testing
@@ -92,8 +93,8 @@ class Route69{
                             $route_good = false;
                             break;
                         }
-                        $controller = $r["settings"]["controller"];
-                        $settings   = $r["settings"];
+                        $controller = $r['settings']['controller'];
+                        $settings   = $r['settings'];
                     }
                 }else{
                     $controller = null;
@@ -102,14 +103,14 @@ class Route69{
                 if($route_good){
                     if(is_callable($controller)){
                         return [
-                            "controller" => $controller,
-                            "settings"   => $settings
+                            'controller' => $controller,
+                            'settings'   => $settings
                         ];
                     }
                     if(isset($this->controllers[$controller])){
                         return [
-                            "controller" => $this->controllers[$controller],
-                            "settings"   => $settings
+                            'controller' => $this->controllers[$controller],
+                            'settings'   => $settings
                         ];
                     }
                 }
@@ -118,7 +119,7 @@ class Route69{
         // Our route was not found, use our fallback
         // Route::otherwise
         foreach($routes as $route){
-            if(isset($route["fallback"])){
+            if(isset($route['fallback'])){
 
             }
         }
@@ -130,19 +131,19 @@ class Route69{
      * @param callable $controller
      */
     protected function _executeController(array $controller){
-        $rf       = new ReflectionFunction($controller["controller"]);
+        $rf       = new ReflectionFunction($controller['controller']);
         $params   = $rf->getParameters();
         $cbParams = array();
 
         foreach($params as $param){
             if(isset($this->items[$param->name])){
                 $cbParams[] = $this->items[$param->name];
-            }elseif(isset($controller["settings"]["resolve"][$param->name])){
-                $cbParams[] = $controller["settings"]["resolve"][$param->name];
+            }elseif(isset($controller['settings']['resolve'][$param->name])){
+                $cbParams[] = $controller['settings']['resolve'][$param->name];
             }
         }
 
-        call_user_func_array($controller["controller"], $cbParams);
+        call_user_func_array($controller['controller'], $cbParams);
     }
 
     /**
@@ -154,7 +155,7 @@ class Route69{
     protected function _comparePathItems($item1, $item2){
         $matches = array();
         // Test if item is a parameter
-        if(preg_match("/^(:|@|#).+?/", $item2, $matches) && !empty($item1)){
+        if(preg_match('/^(:|@|#).+?/', $item2, $matches) && !empty($item1)){
             if($matches[1] == '@' && !ctype_alpha($item1)){
                 return false;
             }
@@ -163,11 +164,11 @@ class Route69{
             }
             $val = ltrim($item2, ':@#');
 
-            $this->items["routeParams"]->$val = $item1;
+            $this->items['routeParams']->$val = $item1;
             return true;
         }
         // Test if the two items match
-        if($this->items["route"]->getStrict()){
+        if($this->items['route']->getStrict()){
             if($item1 === $item2){
                 return true;
             }
@@ -182,18 +183,18 @@ class Route69{
     }
 
     /**
-     * Converts a strng path to an array removing the prefixed "/"
+     * Converts a strng path to an array removing the prefixed '/'
      * @param string $path
      * @return string
      */
     protected function _pathToArray($path){
-        return explode("/", ltrim($path, '/'));
+        return explode('/', ltrim($path, '/'));
     }
 
 }
 
 spl_autoload_register(function($class){
-    $filename = __DIR__ . "/../" . str_replace("\\", "/", $class) . ".php";
+    $filename = __DIR__ . '/../' . str_replace('\\', '/', $class) . '.php';
     if(is_file($filename)){
         require_once $filename;
     }
