@@ -50,7 +50,10 @@ class Route69{
         if(!is_callable($callback)){
             throw new Exception('Config Parameter 1 is not a callback');
         }
-        call_user_func_array($callback, array($this->items['route']));
+
+        $cbParams = $this->_getCbParams($callback);
+
+        call_user_func_array($callback, $cbParams);
     }
 
     /**
@@ -131,19 +134,51 @@ class Route69{
      * @param callable $controller
      */
     protected function _executeController(array $controller){
-        $rf       = new ReflectionFunction($controller['controller']);
+        $cbParams = $this->_getCbParams($controller);
+
+        $result = call_user_func_array($controller['controller'], $cbParams);
+
+        if(isset($controller['settings']['displayAs'])){
+            switch(strtolower($controller['settings']['displayAs'])){
+                case 'json':
+                    echo json_encode($result);
+                    break;
+                case 'xml':
+                    $xml = new SimpleXMLElement('<root/>');
+                    array_walk_recursive($result, array($xml, 'addChild'));
+                    echo $xml->asXML();
+                    break;
+                default:
+                    echo $result;
+                    break;
+            }
+        }
+    }
+
+    protected function _getCbParams($item){
+        $always = array();
+        if(is_array($item)){
+            $func   = $item['controller'];
+            $always = $this->items['route']->getAlways();
+        }else{
+            $func = $item;
+        }
+        $rf       = new ReflectionFunction($func);
         $params   = $rf->getParameters();
         $cbParams = array();
+
 
         foreach($params as $param){
             if(isset($this->items[$param->name])){
                 $cbParams[] = $this->items[$param->name];
-            }elseif(isset($controller['settings']['resolve'][$param->name])){
-                $cbParams[] = $controller['settings']['resolve'][$param->name];
+            }elseif(isset($always['resolve'][$param->name])){
+                $cbParams[] = $always['resolve'][$param->name];
+            }elseif(is_array($item) && isset($item['settings']['resolve'][$param->name])){
+                $cbParams[] = $item['settings']['resolve'][$param->name];
             }
         }
 
-        call_user_func_array($controller['controller'], $cbParams);
+        return $cbParams;
     }
 
     /**

@@ -11,7 +11,18 @@ namespace Route69;
 class Route{
 
     protected $routes = array();
+    protected $always = array();
     protected $strict = true;
+
+    /**
+     * Always set the following settings for each call
+     * @param array $settings
+     * @return \Route69\Route
+     */
+    public function always(array $settings = null){
+        $this->always = $settings;
+        return $this;
+    }
 
     /**
      * Sets a new route to be tested
@@ -48,10 +59,26 @@ class Route{
         return $this->routes;
     }
 
+    /**
+     * Gets a list of the always settings
+     * @return type
+     */
+    public function getAlways(){
+        return $this->always;
+    }
+
+    /**
+     * Turns on/off strict mode
+     * @param type $isStrict
+     */
     public function setStrict($isStrict){
         $this->strict = (bool)$isStrict;
     }
 
+    /**
+     * Gets the current strictness
+     * @return type
+     */
     public function getStrict(){
         return $this->strict;
     }
